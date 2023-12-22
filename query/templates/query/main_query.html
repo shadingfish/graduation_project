@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- query/templates/query/main_query.html -->
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "query/main_query.css" %}">
+{% endblock %}
+
+{% block title %}
+    User Query
+{% endblock %}
+
+{% block content %}
+        <section id="content">
+        <div id="buttons-container">
+            <button class="button" id="query-button">Query</button>
+            <button class="button" id="clear-button">Clear</button>
+            <button class="button" id="chatbot-button">GPT-3.5 ChatBot</button>
+        </div>
+        <div id="container-for-boxes">
+            <div id="input-box">
+                <label for="query-input">Input your query lines:</label>
+                <textarea id="query-input" placeholder="Input your query lines..."></textarea>
+            </div>
+            <div id="output-box">
+                <div id="answer-output"></div>
+            </div>
+            <div id="graph-box">
+                <div id="graph-output">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{% static 'query/main_query.js' %}"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+{% endblock %}
+
