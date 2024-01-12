@@ -8,6 +8,11 @@ django = "*"
 black = "*"
 neo4j = "*"
 python-dotenv = "*"
+langchain = "*"
+langchain-community = "*"
+openai = "*"
+langchain-openai = "*"
+pydantic = "*"
 
 [dev-packages]
 
