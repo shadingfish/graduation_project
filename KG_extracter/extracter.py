@@ -48,6 +48,10 @@ def judge(word: str) -> dict[str, Any]:
 def extract(plant: str):
 
     extract_template = '''
+    Firstly, please help me determine if the word {plant} is a plant and a specific enough plant. For example "Rock" is not a plant. "Wood" is not a specific enough plant. "Tobacco" is a specific enough plant.
+    
+    If it is not, please return exactly the word 'no'. If it is, please implement following steps.
+    
     Please provide the following information about the plant {plant}, with the content in parentheses indicating the context you need to consider. You should only give the answer to each item without introductive sentence like "The plant's family Latin name:".
     
     1. The plant's family Latin name (cannot be empty)
@@ -67,7 +71,7 @@ def extract(plant: str):
     '''
     # \n{format_instruction}
     
-    judge_prompt_template = PromptTemplate(
+    extract_prompt_template = PromptTemplate(
         input_variables=["plant"],
         template=extract_template,
         # partial_variables={
@@ -75,15 +79,23 @@ def extract(plant: str):
         # },
     )
 
-    chain = LLMChain(llm=llm, prompt=judge_prompt_template)
+    chain = LLMChain(llm=llm, prompt=extract_prompt_template)
     chain_result = chain.invoke(input=plant)
     # print(chain_result)
     return chain_result
 
 
+def add_pathogen(plant: str):
+    pass
+
+
 if __name__ == "__main__":
     print("Hello LangChain!")
-    result = parse_output(extract(plant="Nicotiana tabacum")['text'])
-    print(result)
+    result = extract(plant="Grass")['text']
+    if result == "no" or len(result) < 50:
+        print("The given word is not a plant. Result: " + result)
+    else:
+        result = parse_output(result)
+        print(result)
 
 
