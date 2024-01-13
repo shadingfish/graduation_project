@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+     Crop List and Create
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'neo4j_manage/css/list_style.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div id="fetch-url" style="display: none;" data-url="{% url 'fetch-and-update' %}"></div>
+    <div id="update-url" style="display: none;" data-url="{% url 'update-neo4j' %}"></div>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-8 d-flex flex-column justify-content-center">
+                <table><!-- 作物信息列表 -->
+                    <thead>
+                        <tr>
+                            <th>拉丁名</th>
+                            <th>科名</th>
+                            <th>属名</th>
+                            <th>中文名</th>
+                            <th>中文科名</th>
+                            <th>中文属名</th>
+                            <th>最后修改时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for crop in page_obj %}
+                            <tr>
+                                <td>{{ crop.latin_name }}</td>
+                                <td>{{ crop.family_name }}</td>
+                                <td>{{ crop.genus_name }}</td>
+                                <td>{{ crop.chinese_name }}</td>
+                                <td>{{ crop.chinese_family_name }}</td>
+                                <td>{{ crop.chinese_genus_name }}</td>
+                                <td>{{ crop.last_modified }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ crop.latin_name }}', '{% url 'crop_delete' crop.latin_name %}')">删除</button>
+                                    <a href="{% url 'crop_update' crop.latin_name %}" class="btn btn-sm btn-primary">修改</a>
+                                </td>  <!-- 添加操作按钮 -->
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- 分页控件 -->
+                <div class="w-100 d-flex justify-content-center">
+                    <div class="pagination">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                        {% endif %}
+                        <span>页码 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-section">
+                    <form method="post" action="{% url 'neo4j-manage' %}">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-control {% if field.errors %}invalid{% endif %}">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">添加</button>
+                    </form>
+                </div>
+
+
+                <div class="form-section"><!-- 更新作物记录的表单 -->
+                    <form method="post" id="update-form" class="form-inline">
+                        {% csrf_token %}
+                        <label for="crop-select">选择作物：</label>
+                        <select name="crop_name" id="crop-select">
+                            {% for crop in page_obj %}
+                                <option value="{{ crop.latin_name }}">{{ crop.latin_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" onclick="retrieveDataAndShowModal()">检索并更新</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- 弹窗用于显示比较信息 -->
+    <div id="comparison-modal" style="display:none;">
+        <div id="gpt-data">GPT数据加载中...</div>
+        <div id="neo4j-data">Neo4j数据加载中...</div>
+        <button onclick="confirmUpdate()">确认更新</button>
+        <button onclick="closeModal()">关闭</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static "neo4j_manage/js/update.js" %}"></script>
+
+
+{% endblock %}

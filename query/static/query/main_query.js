@@ -1,17 +1,28 @@
 
 let BASE_URL = "http://localhost:8000/"
+
+document.getElementById('query-button').addEventListener('click', function() {
+        document.querySelector('form').submit(); // 触发表单提交
+    });
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('query-button').addEventListener('click', function() {
-        console.log("Base url: " + BASE_URL)
-        let url = BASE_URL + 'query/path-to-query-neo4j-view/'
-        console.log("Using url: " + url)
-        fetch(url)
+        let queryInput = document.getElementById('query-input').value;  // 获取查询语句
+        // 构建请求 URL
+        let url = document.getElementById('graph-url').getAttribute('data-url');
+        // 发送带有查询语句的请求
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()  // 从 cookie 中获取 CSRF 令牌
+            },
+            body: JSON.stringify({ 'search_query': queryInput })  // 发送查询语句
+        })
         .then(response => response.json())
         .then(data => {
-            console.log("Receive data.")
-            // 使用 data['data'] 更新页面内容
+            console.log("Received data.");
             renderGraph(data.nodes, data.edges);
-            console.log("Finished drawing.")
+            console.log("Finished drawing.");
         })
         .catch(error => console.error('Error:', error));
     });

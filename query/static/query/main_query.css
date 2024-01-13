@@ -1,10 +1,12 @@
 /* 在 static/query/main_query.css 文件中添加或修改以下样式 */
-
-/* 引入 Open Sans 字体 */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
-
 body, textarea {
     font-family: 'Open Sans', sans-serif;
+}
+
+#output-box {
+    text-align: left;       /* 文本靠左对齐 */
+    overflow: auto;         /* 内容超出时显示滚动条 */
+    max-height: 400px;      /* 设置最大高度，根据需要调整 */
 }
 
 #content {
@@ -33,7 +35,7 @@ body, textarea {
 
 #input-box {
     width: 20%;
-    background-image: linear-gradient(to right, #54c000, #d7ffc2);
+    background-image: linear-gradient(to right, #028108, #005007);
     padding: 10px;
 }
 

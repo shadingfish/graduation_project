@@ -1,0 +1,132 @@
+/* 表格整体样式 */
+.table {
+    font-size: 0.9rem;
+    width: 100%; /* 表格宽度占满容器 */
+    margin: auto; /* 表格居中 */
+    border-collapse: collapse; /* 边框折叠 */
+}
+
+/* 表格单元格和表头样式 */
+.table th,
+.table td {
+    border: 1px solid #ddd; /* 单元格边框 */
+    padding: 8px; /* 单元格内边距 */
+    text-align: center; /* 文字居中 */
+}
+
+/* 表头样式 */
+.table thead th {
+    background-color: #005400; /* 深绿色背景 */
+    color: white; /* 白色字体 */
+}
+/* 分页控件样式 */
+.pagination {
+    justify-content: center; /* 居中分页按钮 */
+}
+
+/* 表单样式 */
+.form-section {
+    background-color: #f2f2f2; /* 表单背景色 */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* 表单标签和选择框样式 */
+.form-section label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-section select {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    /*border: 1px solid #ddd;*/
+}
+
+/* 表单内的按钮样式 */
+.form-section button {
+    background-color: #008000; /* 绿色按钮 */
+    color: white; /* 白色文字 */
+    border: none;
+    padding: 8px 15px;
+    margin-top: 10px; /* 上间距 */
+    width: 100%; /* 宽度占满容器 */
+    border-radius: 5px;
+}
+
+.form-section button:hover {
+    background-color: #005400; /* 鼠标悬浮时的深绿色 */
+}
+
+.form-control {
+  margin-bottom: 4rem;
+}
+
+.form-control label {
+  font-weight: bold;
+}
+
+.form-control input,
+.form-control textarea {
+  display: block;
+  width: 100%;
+  font: inherit;
+  padding: 0.25rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.errorlist {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+  color: #d6000b;
+}
+
+.invalid label {
+  color: #d6000b;
+}
+
+.invalid input,
+.invalid textarea {
+  border-color: #d6000b;
+  background-color: #ffe6e7;
+}
+
+#alert {
+  margin: 8rem auto 3rem auto;
+  border: 1px solid #d6000b;
+  background-color: #ffe6e7;
+  padding: 1rem;
+  width: 90%;
+  max-width: 40rem;
+}
+
+#alert a {
+  text-decoration: none;
+  border: 1px solid #d6000b;
+  background-color: #d6000b;
+  color: white;
+  padding: 0.25rem 1.5rem;
+  border-radius: 6px;
+}
+
+/* 调整弹窗样式 */
+#comparison-modal {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    display: none;
+}
+
+#comparison-modal div {
+    margin-bottom: 15px;
+}

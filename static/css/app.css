@@ -1,0 +1,81 @@
+/* 导入字体 */
+@import url('https://fonts.googleapis.com/css2?family=Kalnia:wght@400;700&family=Open+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+/* 基础样式 */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+/* 标题样式 */
+h1, h2, h3 {
+    font-family: 'Kalnia', Arial, sans-serif;
+    color: #008000; /* 绿色标题 */
+}
+
+/* 导航栏样式 */
+.main-navigation {
+    width: 100%;
+    background-color: #008000; /* 导航背景颜色 */
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.main-navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-navigation ul li {
+    margin: 0 10px;
+}
+
+.main-navigation a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.main-navigation a:hover,
+.main-navigation a:active {
+    color: #26a100;
+}
+
+/* 主内容区域样式 */
+main {
+    padding-top: 6rem; /* 确保主内容不被顶部导航遮挡 */
+    text-align: center;
+}
+
+/* 正文样式 */
+p {
+    color: black; /* 正文字体颜色 */
+}
+
+.btn-primary {
+    background-color: #005400; /* 深绿色背景 */
+    border-color: #003d33; /* 可以根据需要调整边框颜色 */
+}
+
+.btn-primary:hover {
+    background-color: #004225; /* 深绿色的稍微深一点的阴影色，当鼠标悬浮时 */
+    border-color: #002d1a;
+}
+
+

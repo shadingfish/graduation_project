@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h2>Account Information</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+    </form>
+
+    <hr>
+
+    <h2>Account Actions</h2>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" name="delete_account" class="btn btn-danger">Delete Account</button>
+    </form>
+  </div>
+{% endblock %}

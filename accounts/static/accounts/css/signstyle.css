@@ -1,0 +1,43 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Kalnia:wght@400;700&family=Open+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins&display=swap');
+
+body {
+    background-color: #E6FFE6; /* 绿色背景 */
+    font-family: 'Open Sans', Arial, sans-serif; /* 无衬线字体 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* 垂直居中 */
+}
+
+.container {
+    background-color: #FFFFFF; /* 白色容器背景 */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+}
+
+h1 {
+    font-family: 'Kalnia', Arial, sans-serif;
+    color: #008000; /* 绿色标题 */
+    text-align: center;
+}
+
+form {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #008000; /* 绿色按钮背景 */
+    color: #FFFFFF; /* 按钮文本颜色 */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005400; /* 按钮悬停时的背景颜色 */
+}

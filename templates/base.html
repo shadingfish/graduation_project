@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,10 +8,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     {% block css_files %}
-        <link rel="stylesheet" href="{% static "app.css" %}">
+        <link rel="stylesheet" href="{% static "css/app.css" %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     {% endblock %}
 </head>
 <body>
-    {% block content %}{% endblock %}
+        <!-- Material-UI Drawer 组件 -->
+        <header>
+            <nav class="main-navigation">
+                <!-- 侧边栏选项 -->
+                <ul>
+                    <li><a href="{% url 'query-page' %}">检索</a></li>
+                    <li><a href="{% url 'profile' %}">账户管理</a></li>
+                    {% if request.user|has_group:"neo4j_manager" %}
+                        <li><a href="{% url 'neo4j-manage' %}">管理图数据库</a></li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}" id="logout-link">登出</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- 主内容区域 -->
+            {% block content %}
+            {% endblock %}
+        </main>
+    <script src="{% static 'js/base.js' %}"></script>
 </body>
 </html>

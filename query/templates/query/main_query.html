@@ -3,6 +3,8 @@
 
 <!-- query/templates/query/main_query.html -->
 {% block css_files %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <link rel="stylesheet" href="{% static "query/main_query.css" %}">
 {% endblock %}
 
@@ -11,19 +13,63 @@
 {% endblock %}
 
 {% block content %}
-        <section id="content">
+    <div id="graph-url" style="display: none;" data-url="{% url 'query-neo4j' %}"></div>
+    <section id="content">
         <div id="buttons-container">
-            <button class="button" id="query-button">Query</button>
+            <button type="button" class="button" id="query-button">Query</button>
             <button class="button" id="clear-button">Clear</button>
             <button class="button" id="chatbot-button">GPT-3.5 ChatBot</button>
         </div>
         <div id="container-for-boxes">
             <div id="input-box">
-                <label for="query-input">Input your query lines:</label>
-                <textarea id="query-input" placeholder="Input your query lines..."></textarea>
+                <form method="post" action="{% url 'query-page' %}">
+                    {% csrf_token %}
+                    <label for="query-input" style="color: white;">Input your query lines:</label>
+                    <textarea id="query-input" name="search_query" placeholder="Input your query lines..."></textarea>
+                </form>
             </div>
             <div id="output-box">
-                <div id="answer-output"></div>
+                    {% if search_results %}
+                        <div id="answer-output">
+                            {% with sr=search_results %}
+                                {% if sr.family_name %}<p>Family Name: {{ sr.family_name }}</p>{% endif %}
+                                {% if sr.genus_name %}<p>Genus Name: {{ sr.genus_name }}</p>{% endif %}
+                                {% if sr.binomial %}<p>Binomial: {{ sr.binomial }}</p>{% endif %}
+                                {% if sr.en_name %}<p>English Name: {{ sr.en_name }}</p>{% endif %}
+
+                                {% if sr.en_common_names %}
+                                    <p>English Common Names:</p>
+                                    <ul>{% for name in sr.en_common_names %}<li>{{ name }}</li>{% endfor %}</ul>
+                                {% endif %}
+
+                                {% if sr.cn_name %}<p>Chinese Name: {{ sr.cn_name }}</p>{% endif %}
+                                {% if sr.cn_common_names %}
+                                    <p>Chinese Common Names:</p>
+                                    <ul>{% for name in sr.cn_common_names %}<li>{{ name }}</li>{% endfor %}</ul>
+                                {% endif %}
+
+                                {% if sr.diseases_and_pathogen %}
+                                    <p>Diseases and Pathogens:</p>
+                                    <ul>
+                                        {% for disease, pathogen in sr.diseases_and_pathogen.items %}
+                                            <li>{{ disease }}: {{ pathogen }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                                {% if sr.suit_humidity %}<p>Suitable Humidity: {{ sr.suit_humidity }}</p>{% endif %}
+                                {% if sr.suit_temperature %}<p>Suitable Temperature: {{ sr.suit_temperature }}</p>{% endif %}
+                                {% if sr.ket_stages %}
+                                    <p>Key Stages:</p>
+                                    <ul>{% for stage in sr.ket_stages %}<li>{{ stage }}</li>{% endfor %}</ul>
+                                {% endif %}
+                                {% if sr.suit_soil %}<p>Suitable Soil: {{ sr.suit_soil }}</p>{% endif %}
+                                {% if sr.caution %}<p>Caution: {{ sr.caution }}</p>{% endif %}
+                            {% endwith %}
+                        </div>
+                    {% else %}
+                        <p>No results found.</p>
+                    {% endif %}
             </div>
             <div id="graph-box">
                 <div id="graph-output">
@@ -32,7 +78,9 @@
         </div>
     </section>
 
-    <script src="{% static 'query/main_query.js' %}"></script>
+
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="{% static 'query/main_query.js' %}"></script>
+
 {% endblock %}
 
