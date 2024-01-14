@@ -47,7 +47,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return self.request.user
-    
+
     def post(self, request, *args, **kwargs):
         if "delete_account" in request.POST:
             user_to_delete = request.user
@@ -55,15 +55,15 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             user_to_delete.delete()
             return redirect("login")
         return super().post(request, *args, **kwargs)
-    
+
 
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangeForm
-    success_url = reverse_lazy('profile')  # 密码更改成功后重定向到的 URL
-    template_name = 'accounts/change_password.html'
+    success_url = reverse_lazy("profile")  # 密码更改成功后重定向到的 URL
+    template_name = "accounts/change_password.html"
 
     def form_valid(self, form):
         user = form.save()
         update_session_auth_hash(self.request, user)  # 重要，用于保持用户在更改密码后仍然登录状态
-        messages.success(self.request, '您的密码已成功更改！')
+        messages.success(self.request, "您的密码已成功更改！")
         return super().form_valid(form)

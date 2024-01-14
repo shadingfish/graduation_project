@@ -4,11 +4,30 @@ let BASE_URL = "http://localhost:8000/"
 document.getElementById('query-button').addEventListener('click', function() {
         document.querySelector('form').submit(); // 触发表单提交
     });
+
+document.addEventListener('DOMContentLoaded', function() {
+    let graphDataElement = document.getElementById('graph-data');
+    console.log(graphDataElement.textContent);
+    if (graphDataElement) {
+        try {
+            let graphData = JSON.parse(graphDataElement.textContent);
+            console.log(graphData);
+            // 如果需要，调用 renderGraph 函数
+            if (graphData) {
+                renderGraph(graphData.nodes, graphData.edges);
+            }
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('query-button').addEventListener('click', function() {
         let queryInput = document.getElementById('query-input').value;  // 获取查询语句
         // 构建请求 URL
         let url = document.getElementById('graph-url').getAttribute('data-url');
+        console.log(url)
         // 发送带有查询语句的请求
         fetch(url, {
             method: 'POST',

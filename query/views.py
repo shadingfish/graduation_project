@@ -1,6 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from neo4j import GraphDatabase
 from django.http import JsonResponse
 from django.conf import settings
@@ -23,27 +26,37 @@ class QueryView(LoginRequiredMixin, View):
             ).order_by("-timestamp")[:10],
         }
         return render(request, "query/main_query.html", context)
-    
+
     def post(self, request, *args, **kwargs):
-        recent_queries = QueryHistory.objects.filter(
-            user=self.request.user
-        ).order_by("-timestamp")[:10]
+    
+        recent_queries = QueryHistory.objects.filter(user=self.request.user).order_by(
+            "-timestamp"
+        )[:10]
         search_query = request.POST.get("search_query")
         try:
             with create_neo4j_transaction() as session:
                 search_results = query_dict(session, search_query)
-                
+
                 print("Query results:")
                 print(search_results)
-            
+
             # 记录查询历史，无论 search_results 是否为空
             QueryHistory.objects.create(user=request.user, query_content=search_query)
-            
-            return render(request, self.template_name, {"search_results": search_results, "recent_queries": recent_queries})
-        
+            graph_data = query_neo4j(request)
+
+            return render(
+                request,
+                self.template_name,
+                {"search_results": search_results, "recent_queries": recent_queries, "graph_data": graph_data},
+            )
+
         except Exception as e:
             # 发生异常时，返回错误信息
-            return render(request, self.template_name, {"error_message": str(e), "recent_queries": recent_queries})
+            return render(
+                request,
+                self.template_name,
+                {"error_message": str(e), "recent_queries": recent_queries},
+            )
 
 
 class Neo4jConnection:
@@ -82,27 +95,35 @@ class Neo4jConnection:
         return response
 
 
-def query_neo4j(request, label):
-    print("Querying Neo4j..." + label)
+@login_required
+@method_decorator(csrf_exempt, name="dispatch")
+def query_neo4j(request):
+    print("Querying Neo4j..." )
     conn = Neo4jConnection(settings.NEO4J_URL, "neo4j", settings.NEO4J_PASSWORD)
-    
+
+    # # 修改查询字符串以针对特定标签及其两层内的节点和关系
+    # query_string = """
+    # MATCH (n)-[r]-(m)RETURN n LIMIT 10
+    # RETURN DISTINCT n, r, m
+    # """.format(
+    #     label=label
+    # )  # 假设 label 是您想要查询的标签
+
     # 修改查询字符串以针对特定标签及其两层内的节点和关系
     query_string = """
-    MATCH (n:{label})-[r*0..2]-(m)
-    RETURN DISTINCT n, r, m
-    """.format(label=label)  # 假设 label 是您想要查询的标签
-    
+    MATCH (n)-[r]-(m) RETURN DISTINCT n, r, m LIMIT 10
+    """
     results = conn.query(query_string)
     conn.close()
     nodes = []
     edges = []
     print("Formatting fetched data...")
-    
+
     for record in results:
         node_n = record["n"]
         node_m = record.get("m")  # m 可能不存在于所有记录中
         rel_r = record.get("r")  # r 可能不存在于所有记录中
-        
+
         # 添加节点
         for node in [node_n, node_m]:
             if node:
@@ -110,10 +131,12 @@ def query_neo4j(request, label):
                     {
                         "id": node.id,
                         "label": list(node.labels)[0],
-                        "title": ", ".join([f"{key}: {node[key]}" for key in node.keys()]),
+                        "title": ", ".join(
+                            [f"{key}: {node[key]}" for key in node.keys()]
+                        ),
                     }
                 )
-        
+
         # 添加边
         if rel_r:
             for rel in rel_r:
@@ -122,20 +145,22 @@ def query_neo4j(request, label):
                         "from": rel.start_node.id,
                         "to": rel.end_node.id,
                         "label": type(rel).__name__,
-                        "title": ", ".join([f"{key}: {rel[key]}" for key in rel.keys()]),
+                        "title": ", ".join(
+                            [f"{key}: {rel[key]}" for key in rel.keys()]
+                        ),
                     }
                 )
-    
+
     # 移除重复的节点
     nodes = list({v["id"]: v for v in nodes}.values())
-    
+
     print("nodes: {}".format(nodes))
     print("edges: {}".format(edges))
-    
+
     conn.close()
-    
+
     print("Finished querying")
-    return JsonResponse({"nodes": nodes, "edges": edges})
+    return {"nodes": nodes, "edges": edges}
 
 
 def chatbot(request):

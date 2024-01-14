@@ -91,9 +91,8 @@ class CropView(LoginRequiredMixin, Neo4jManagerMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = CropForm(request.POST)
-        success_url = reverse_lazy('neo4j-manage')
+        success_url = reverse_lazy("neo4j-manage")
 
-        
         if form.is_valid():
             try:
                 with transaction.atomic():
@@ -106,12 +105,12 @@ class CropView(LoginRequiredMixin, Neo4jManagerMixin, View):
 
                     # 保存 Django 模型
                     crop.save()
-                    
+
                 # 重定向到成功页面或显示成功信息
                 return HttpResponseRedirect(success_url)
             except Exception as e:
                 form.add_error(None, "Neo4j写入失败，作物保存事务被终止")
-        
+
         crop_list = Crop.objects.order_by("-last_modified")
         paginator = Paginator(crop_list, self.paginate_by)
         page_number = request.GET.get("page")

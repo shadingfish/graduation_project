@@ -88,7 +88,9 @@
         </div>
     </section>
 
-
+    <script type="application/json" id="graph-data">
+        {{ graph_data|json_script:"graph-data" }}
+    </script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="{% static 'query/main_query.js' %}"></script>
 
