@@ -55,7 +55,7 @@ def create_crop(tx, crop_data):
         for stage in crop_data["ket_stages"]:
             tx.run(
                 "MATCH (c:Crop {Binomial: $Binomial}), "
-                "(g:GrowthStages {Stage: $Stage}) "
+                "(g:GrowthStage {Stage: $Stage}) "
                 "MERGE (c)-[:HAS_KEY_STAGE]->(g)",
                 Binomial=crop_data["binomial"],
                 Stage=stage,
@@ -162,7 +162,7 @@ def query_dict(tx, plant):
         OPTIONAL MATCH (c)-[:BELONGS_TO]->(g:Genus)
         OPTIONAL MATCH (g)-[:PART_OF]->(f:Family)
         OPTIONAL MATCH (c)-[:SUITABLE_FOR]->(s:SoilType)
-        OPTIONAL MATCH (c)-[:HAS_KEY_STAGE]->(st:GrowthStages)
+        OPTIONAL MATCH (c)-[:HAS_KEY_STAGE]->(st:GrowthStage)
         OPTIONAL MATCH (c)-[r:SUSCEPTIBLE_TO]->(p:Pathogen)
         RETURN
             c.Binomial AS binomial,
@@ -175,9 +175,9 @@ def query_dict(tx, plant):
             c.Caution AS caution,
             f.FamilyName AS family_name,
             g.GenusName AS genus_name,
-            COLLECT(s.Name) AS suit_soil,
-            COLLECT(st.Stage) AS ket_stages,
-            COLLECT({disease: r.disease, pathogen: p.Binomial}) AS diseases_and_pathogen
+            COLLECT(DISTINCT  s.Name) AS suit_soil,
+            COLLECT(DISTINCT  st.Stage) AS key_stages,
+            COLLECT(DISTINCT {disease: r.disease, pathogen: p.Binomial}) AS diseases_and_pathogen
         """
         result = tx.run(cypher_query, {"binomial": plant})
 
@@ -195,7 +195,7 @@ def query_dict(tx, plant):
                 "family_name": record["family_name"],
                 "genus_name": record["genus_name"],
                 "suit_soil": record["suit_soil"],
-                "ket_stages": record["ket_stages"],
+                "key_stages": record["key_stages"],
                 "diseases_and_pathogen": record["diseases_and_pathogen"],
             }
 

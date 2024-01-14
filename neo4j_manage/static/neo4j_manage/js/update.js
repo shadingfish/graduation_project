@@ -3,22 +3,22 @@ function retrieveDataAndShowModal() {
     fetchAndUpdate(cropName);
 }
 
-$(document).ready(function() {
-    $('form').submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-            type: $(this).attr('method'),
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            success: function(response) {
-                alert(response.message);
-                if (response.success) {
-                    window.location.reload(); // 或重定向到其他页面
-                }
-            }
-        });
-    });
-});
+// $(document).ready(function() {
+//     $('form').submit(function(event) {
+//         event.preventDefault();
+//         $.ajax({
+//             type: $(this).attr('method'),
+//             url: $(this).attr('action'),
+//             data: $(this).serialize(),
+//             success: function(response) {
+//                 alert(response.message);
+//                 if (response.success) {
+//                     window.location.reload(); // 或重定向到其他页面
+//                 }
+//             }
+//         });
+//     });
+// });
 
 function fetchAndUpdate(cropName) {
     let fetchUrl = document.getElementById('fetch-url').getAttribute('data-url');

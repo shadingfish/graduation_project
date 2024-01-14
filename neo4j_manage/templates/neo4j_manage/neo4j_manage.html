@@ -17,8 +17,9 @@
     <div id="update-url" style="display: none;" data-url="{% url 'update-neo4j' %}"></div>
     <div class="container-fluid mt-4">
         <div class="row">
-            <div class="col-md-8 d-flex flex-column justify-content-center">
-                <table><!-- 作物信息列表 -->
+            <div class="col-md-8 d-flex flex-column justify-content-start">
+            <h3>Recorded Crop Catalog</h3>
+                <table class="table"><!-- 作物信息列表 -->
                     <thead>
                         <tr>
                             <th>拉丁名</th>
@@ -61,34 +62,54 @@
                         {% endif %}
                     </div>
                 </div>
+{#                <div class="form-section"><!-- 更新作物记录的表单 -->#}
+{#                <h3>Update KG</h3>#}
+{#                    <form method="post" id="update-form" class="form-inline">#}
+{#                        {% csrf_token %}#}
+{#                        <label for="crop-select">选择作物：</label>#}
+{#                        <select name="crop_name" id="crop-select">#}
+{#                            {% for crop in page_obj %}#}
+{#                                <option value="{{ crop.latin_name }}">{{ crop.latin_name }}</option>#}
+{#                            {% endfor %}#}
+{#                        </select>#}
+{#                        <button type="button" onclick="retrieveDataAndShowModal()">检索并更新</button>#}
+{#                    </form>#}
+{#                </div>#}
+                <div class="form-section">
+                    <h3>Update KG</h3>
+                    <form method="post" id="update-form" class="form-inline">
+                        {% csrf_token %}
+                        <label for="crop-select" class="my-1 mr-2">选择作物：</label>
+                        <select name="crop_name" id="crop-select" class="form-control my-1 mr-sm-2">
+                            {% for crop in page_obj %}
+                                <option value="{{ crop.latin_name }}">{{ crop.latin_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" class="btn btn-primary my-1" onclick="retrieveDataAndShowModal()">检索并更新</button>
+                    </form>
+                </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-section">
+                <h3>Add New Variety</h3>
                     <form method="post" action="{% url 'neo4j-manage' %}">
                         {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="form-errors">
+                                {% for error in form.non_field_errors %}
+                                    <p class="error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         {% for field in form %}
-                            <div class="form-control {% if field.errors %}invalid{% endif %}">
+                            <div class="formcontrol {% if field.errors %}invalid{% endif %}">
                                 {{ field.label_tag }}
                                 {{ field }}
                                 {{ field.errors }}
                             </div>
                         {% endfor %}
                         <button type="submit" class="btn btn-primary">添加</button>
-                    </form>
-                </div>
-
-
-                <div class="form-section"><!-- 更新作物记录的表单 -->
-                    <form method="post" id="update-form" class="form-inline">
-                        {% csrf_token %}
-                        <label for="crop-select">选择作物：</label>
-                        <select name="crop_name" id="crop-select">
-                            {% for crop in page_obj %}
-                                <option value="{{ crop.latin_name }}">{{ crop.latin_name }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="button" onclick="retrieveDataAndShowModal()">检索并更新</button>
                     </form>
                 </div>
             </div>

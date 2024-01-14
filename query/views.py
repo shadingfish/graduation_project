@@ -21,24 +21,29 @@ class QueryView(LoginRequiredMixin, View):
             "recent_queries": QueryHistory.objects.filter(
                 user=self.request.user
             ).order_by("-timestamp")[:10],
-            "is_admin": request.user.groups.filter(name="管理员").exists(),
         }
         return render(request, "query/main_query.html", context)
     
     def post(self, request, *args, **kwargs):
+        recent_queries = QueryHistory.objects.filter(
+            user=self.request.user
+        ).order_by("-timestamp")[:10]
         search_query = request.POST.get("search_query")
         try:
             with create_neo4j_transaction() as session:
                 search_results = query_dict(session, search_query)
+                
+                print("Query results:")
+                print(search_results)
             
             # 记录查询历史，无论 search_results 是否为空
             QueryHistory.objects.create(user=request.user, query_content=search_query)
             
-            return render(request, self.template_name, {"search_results": search_results})
+            return render(request, self.template_name, {"search_results": search_results, "recent_queries": recent_queries})
         
         except Exception as e:
             # 发生异常时，返回错误信息
-            return render(request, self.template_name, {"error_message": str(e)})
+            return render(request, self.template_name, {"error_message": str(e), "recent_queries": recent_queries})
 
 
 class Neo4jConnection:

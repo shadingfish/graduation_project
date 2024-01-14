@@ -1,5 +1,6 @@
-from django.contrib.auth import logout
+from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import View, UpdateView
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from .forms import UserRegisterForm, UserUpdateForm
 
 
@@ -46,10 +47,23 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return self.request.user
-
+    
     def post(self, request, *args, **kwargs):
         if "delete_account" in request.POST:
+            user_to_delete = request.user
             logout(request)
-            request.user.delete()
+            user_to_delete.delete()
             return redirect("login")
         return super().post(request, *args, **kwargs)
+    
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('profile')  # 密码更改成功后重定向到的 URL
+    template_name = 'accounts/change_password.html'
+
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)  # 重要，用于保持用户在更改密码后仍然登录状态
+        messages.success(self.request, '您的密码已成功更改！')
+        return super().form_valid(form)

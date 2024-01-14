@@ -22,9 +22,17 @@
     <hr>
 
     <h2>Account Actions</h2>
+    <a href="{% url 'change-password' %}" class="btn btn-sm btn-warning" style="margin-bottom: 10px;">Change Password</a>
+      <br>
     <form method="post">
       {% csrf_token %}
-      <button type="submit" name="delete_account" class="btn btn-danger">Delete Account</button>
+      <button type="submit" name="delete_account" class="btn btn-danger" onclick="return confirmDelete();">Delete Account</button>
     </form>
   </div>
+
+    <script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete your account? This action cannot be undone.');
+    }
+    </script>
 {% endblock %}

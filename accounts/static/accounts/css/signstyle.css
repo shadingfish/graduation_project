@@ -41,3 +41,48 @@ button {
 button:hover {
     background-color: #005400; /* 按钮悬停时的背景颜色 */
 }
+
+.btn-primary {
+    background-color: #005400; /* 深绿色背景 */
+    border-color: #003d33; /* 可以根据需要调整边框颜色 */
+}
+
+.btn-primary:hover {
+    background-color: #004225; /* 深绿色的稍微深一点的阴影色，当鼠标悬浮时 */
+    border-color: #002d1a;
+}
+
+.errorlist {
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+  color: #d6000b;
+}
+
+.invalid label {
+  color: #d6000b;
+}
+
+.invalid input,
+.invalid textarea {
+  border-color: #d6000b;
+  background-color: #ffe6e7;
+}
+
+#alert {
+  margin: 8rem auto 3rem auto;
+  border: 1px solid #d6000b;
+  background-color: #ffe6e7;
+  padding: 1rem;
+  width: 90%;
+  max-width: 40rem;
+}
+
+#alert a {
+  text-decoration: none;
+  border: 1px solid #d6000b;
+  background-color: #d6000b;
+  color: white;
+  padding: 0.25rem 1.5rem;
+  border-radius: 6px;
+}

@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.urls import reverse_lazy, reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.views.generic import View, DeleteView, UpdateView
 from django.shortcuts import render, redirect, get_object_or_404
@@ -73,7 +73,7 @@ class CropUpdateView(LoginRequiredMixin, Neo4jManagerMixin, UpdateView):
 
 class CropView(LoginRequiredMixin, Neo4jManagerMixin, View):
     template_name = "neo4j_manage/neo4j_manage.html"
-    paginate_by = 15
+    paginate_by = 10
 
     def get(self, request, *args, **kwargs):
         # 分页显示作物
@@ -91,6 +91,9 @@ class CropView(LoginRequiredMixin, Neo4jManagerMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = CropForm(request.POST)
+        success_url = reverse_lazy('neo4j-manage')
+
+        
         if form.is_valid():
             try:
                 with transaction.atomic():
@@ -103,13 +106,18 @@ class CropView(LoginRequiredMixin, Neo4jManagerMixin, View):
 
                     # 保存 Django 模型
                     crop.save()
-
-                return JsonResponse({"success": True, "message": "作物添加成功"})
+                    
+                # 重定向到成功页面或显示成功信息
+                return HttpResponseRedirect(success_url)
             except Exception as e:
-                return JsonResponse({"success": False, "message": str(e)})
-        else:
-            # 表单无效的情况
-            return JsonResponse({"success": False, "message": "表单数据无效"})
+                form.add_error(None, "Neo4j写入失败，作物保存事务被终止")
+        
+        crop_list = Crop.objects.order_by("-last_modified")
+        paginator = Paginator(crop_list, self.paginate_by)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        # 表单无效的情况
+        return render(request, self.template_name, {"form": form, "page_obj": page_obj})
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -123,6 +131,8 @@ class FetchAndUpdateView(LoginRequiredMixin, Neo4jManagerMixin, View):
         print("Querying Neo4j...")
         with create_neo4j_transaction() as session:
             neo4j_data = query_dict(session, crop_name)
+            print("Query results:")
+            print(neo4j_data)
 
         return JsonResponse({"gpt_data": gpt_data, "neo4j_data": neo4j_data})
 

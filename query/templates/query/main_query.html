@@ -3,9 +3,9 @@
 
 <!-- query/templates/query/main_query.html -->
 {% block css_files %}
+    <link rel="stylesheet" href="{% static "query/main_query.css" %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
-    <link rel="stylesheet" href="{% static "query/main_query.css" %}">
 {% endblock %}
 
 {% block title %}
@@ -51,17 +51,17 @@
                                 {% if sr.diseases_and_pathogen %}
                                     <p>Diseases and Pathogens:</p>
                                     <ul>
-                                        {% for disease, pathogen in sr.diseases_and_pathogen.items %}
-                                            <li>{{ disease }}: {{ pathogen }}</li>
+                                        {% for item in sr.diseases_and_pathogen %}
+                                            <li>{{ item.disease }}: {{ item.pathogen }}</li>
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
 
                                 {% if sr.suit_humidity %}<p>Suitable Humidity: {{ sr.suit_humidity }}</p>{% endif %}
                                 {% if sr.suit_temperature %}<p>Suitable Temperature: {{ sr.suit_temperature }}</p>{% endif %}
-                                {% if sr.ket_stages %}
+                                {% if sr.key_stages %}
                                     <p>Key Stages:</p>
-                                    <ul>{% for stage in sr.ket_stages %}<li>{{ stage }}</li>{% endfor %}</ul>
+                                    <ul>{% for stage in sr.key_stages %}<li>{{ stage }}</li>{% endfor %}</ul>
                                 {% endif %}
                                 {% if sr.suit_soil %}<p>Suitable Soil: {{ sr.suit_soil }}</p>{% endif %}
                                 {% if sr.caution %}<p>Caution: {{ sr.caution }}</p>{% endif %}
@@ -70,6 +70,16 @@
                     {% else %}
                         <p>No results found.</p>
                     {% endif %}
+            </div>
+            <div id="recent-queries-box">
+                <h3>Recent Queries</h3>
+                <ul>
+                    {% for query in recent_queries %}
+                        <li> {{ query.timestamp }} - {{ query.query_content }}</li>
+                    {% empty %}
+                        <li>No recent queries.</li>
+                    {% endfor %}
+                </ul>
             </div>
             <div id="graph-box">
                 <div id="graph-output">
