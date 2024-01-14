@@ -138,6 +138,7 @@ def create_pathogen_nodes(tx, pathogen_data):
 # 创建或更新 Genus 和 Family 节点，并建立它们之间的 PART_OF 关系
 def create_genus_family_in_neo4j(tx, crop):
     try:
+        print("Executing Neo4j transaction...")
         tx.run(
             """
             MERGE (f:Family {FamilyName: $family_name, ChineseFamilyName: $chinese_family_name})
@@ -153,6 +154,7 @@ def create_genus_family_in_neo4j(tx, crop):
         )
     except Exception as e:
         print(f"Error connecting to Neo4j: {e}")
+        raise
 
 
 def query_dict(tx, plant):

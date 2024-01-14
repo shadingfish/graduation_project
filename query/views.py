@@ -28,7 +28,6 @@ class QueryView(LoginRequiredMixin, View):
         return render(request, "query/main_query.html", context)
 
     def post(self, request, *args, **kwargs):
-    
         recent_queries = QueryHistory.objects.filter(user=self.request.user).order_by(
             "-timestamp"
         )[:10]
@@ -42,12 +41,12 @@ class QueryView(LoginRequiredMixin, View):
 
             # 记录查询历史，无论 search_results 是否为空
             QueryHistory.objects.create(user=request.user, query_content=search_query)
-            graph_data = query_neo4j(request)
+            # graph_data = query_neo4j(request)
 
             return render(
                 request,
                 self.template_name,
-                {"search_results": search_results, "recent_queries": recent_queries, "graph_data": graph_data},
+                {"search_results": search_results, "recent_queries": recent_queries},
             )
 
         except Exception as e:
@@ -98,7 +97,7 @@ class Neo4jConnection:
 @login_required
 @method_decorator(csrf_exempt, name="dispatch")
 def query_neo4j(request):
-    print("Querying Neo4j..." )
+    print("Querying Neo4j...")
     conn = Neo4jConnection(settings.NEO4J_URL, "neo4j", settings.NEO4J_PASSWORD)
 
     # # 修改查询字符串以针对特定标签及其两层内的节点和关系
