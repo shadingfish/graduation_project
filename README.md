@@ -1,6 +1,11 @@
 # DingyiYu_graduation_project
-
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+![img_4.png](img_4.png)
+![img_7.png](img_7.png)
+![img_5.png](img_5.png)
 ![img.png](img.png)
+![img_6.png](img_6.png)
 
 Currently, this project is just a prototype. I am considering developing an entity recognition algorithm using BERT or leveraging a large language model for fine-tuning to accomplish entity recognition tasks. I am comparing and experimenting with the pros and cons of both approaches.
 
