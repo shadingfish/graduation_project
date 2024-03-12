@@ -98,14 +98,11 @@ class CropView(LoginRequiredMixin, Neo4jManagerMixin, View):
                 with transaction.atomic():
                     # Django 数据库操作
                     crop = form.save(commit=False)
-
                     # Neo4j 数据库操作
                     with create_neo4j_transaction() as session:
                         create_genus_family_in_neo4j(session, crop)
-
                     # 保存 Django 模型
                     crop.save()
-
                 # 重定向到成功页面或显示成功信息
                 return HttpResponseRedirect(success_url)
             except Exception as e:

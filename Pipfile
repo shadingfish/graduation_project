@@ -13,6 +13,7 @@ langchain-community = "*"
 openai = "*"
 langchain-openai = "*"
 pydantic = "*"
+tiktoken = "*"
 
 [dev-packages]
 

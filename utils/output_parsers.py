@@ -117,7 +117,7 @@ class PlantIntel(BaseModel):
         description="Choose three most suitable stages only from these items: 'Germination, Seedling, Vegetative, Budding, Flowering, Pollination and Fertilization, Fruit Development and Seed Formation, Maturity, Dormancy'. And create a 3-entry list with chosen items like this: ['Stage1', 'Stage2', 'Stage3'].",
     )
 
-    suit_soil: str = Field(
+    suit_soil: List[str] = Field(
         title="Suit Soil",
         examples=[["SoilType1", "SoilType2", "SoilType3"]],
         description="Choose three most suitable types only from these items: 'Sandy Soil, Silty Soil, Clay Soil, Loamy Soil, Peaty Soil, Chalky Soil, Sandy Loam'. And create a 3-entry list with chosen items like this: ['SoilType1', 'SoilType2', 'SoilType3'].",

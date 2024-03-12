@@ -64,6 +64,8 @@ class PasswordsChangeView(PasswordChangeView):
 
     def form_valid(self, form):
         user = form.save()
-        update_session_auth_hash(self.request, user)  # 重要，用于保持用户在更改密码后仍然登录状态
+        update_session_auth_hash(
+            self.request, user
+        )  # 重要，用于保持用户在更改密码后仍然登录状态
         messages.success(self.request, "您的密码已成功更改！")
         return super().form_valid(form)

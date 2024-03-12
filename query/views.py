@@ -8,6 +8,7 @@ from neo4j import GraphDatabase
 from django.http import JsonResponse
 from django.conf import settings
 from utils.store_data import create_neo4j_transaction, query_dict
+from utils.question_type import parse_query, question_type_dict, generate_answer
 
 from query.models import QueryHistory
 
@@ -34,7 +35,11 @@ class QueryView(LoginRequiredMixin, View):
         search_query = request.POST.get("search_query")
         try:
             with create_neo4j_transaction() as session:
-                search_results = query_dict(session, search_query)
+                parsed_query = parse_query(search_query)
+                search_results = generate_answer(parsed_query)
+
+                if search_results == "x":
+                    search_results = "没有找到答案，如果您愿意，可以使用在线询问服务。"
 
                 print("Query results:")
                 print(search_results)
@@ -42,7 +47,6 @@ class QueryView(LoginRequiredMixin, View):
             # 记录查询历史，无论 search_results 是否为空
             QueryHistory.objects.create(user=request.user, query_content=search_query)
             # graph_data = query_neo4j(request)
-
             return render(
                 request,
                 self.template_name,
