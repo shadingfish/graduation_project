@@ -5,6 +5,7 @@ from .views import (
     UpdateNeo4jView,
     CropUpdateView,
     CropDeleteView,
+    FileUploadView,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path("update_neo4j/", UpdateNeo4jView.as_view(), name="update-neo4j"),
     path("crop/update/<str:latin_name>/", CropUpdateView.as_view(), name="crop_update"),
     path("crop/delete/<str:latin_name>/", CropDeleteView.as_view(), name="crop_delete"),
+    path("upload/", FileUploadView.as_view(), name="upload-crop-file"),
 ]

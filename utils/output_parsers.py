@@ -1,5 +1,5 @@
 from langchain.output_parsers import PydanticOutputParser
-from pydantic import BaseModel, Field
+from langchain_core.pydantic_v1 import BaseModel, Field
 from typing import List
 
 # 1. The plant's family Latin name (cannot be empty)
@@ -17,47 +17,48 @@ from typing import List
 # 12. The type of soil suitable for cultivating this plant (select the two most accurate types from 'Sandy Soil, Silty Soil, Clay Soil, Loamy Soil, Peaty Soil, Chalky Soil, Sandy Loam', and create a list like this: ["SoilType1", "SoilType2"].)
 # 13. A brief description of the precautions to take when cultivating this plant.
 
+# family_name: str = Field(title="Family Name", description="The plant's family Latin name (cannot be empty)")
+#
+# genus_name: str = Field(title="Genus Name", description="The plant's genus Latin name (cannot be empty)")
+#
+# binomial: str = Field(title="Binomial", description="The plant's binomial nomenclature (cannot be empty)")
+#
+# en_name: str = Field(title="En Name", description="The plant's English name (can be empty if not available)")
+#
+# en_common_names: List[str] = Field(title="En Common Names", description="The plant's English common names (return a list of up to three most common names like this: ['name1', 'name2', 'name3']. Can be empty if not available.)")
+#
+# cn_name: str = Field(title="Cn Name", description="The plant's Chinese name (answer in Chinese, cannot be empty)")
+#
+# cn_common_names: List[str] = Field(title="Cn Common Names", description="The plant's Chinese common names (return a list of up to three most common names like this: ['name1', 'name2', 'name3']. Can be empty if not available.)")
+#
+# diseases_and_pathogen: dict = Field(title="Diseases And Pathogen", description="Diseases susceptible to this plant and the binomial nomenclature of related pathogens (cannot be empty, select the two most common, return in a dictionary of key-value pairs where the key is the disease and the value is the Latin name of the pathogen, like this: 'disease1':'pathogen1'.)")
+#
+# suit_humidity: str = Field(title="Suit Humidity", description="The suitable relative humidity range for cultivating this plant (in %, like 'a%-b%'.)")
+#
+# suit_temperature: str = Field(title="Suit Temperature", description="The suitable temperature range in Celsius for cultivating this plant (in Celsius, like 'a℃-b℃'.)")
+#
+# ket_stages: List[str] = Field(title="Ket Stages", description="The key growth stages for cultivating this plant (select the two most accurate stages from 'Germination, Seedling, Vegetative, Budding, Flowering, Pollination and Fertilization, Fruit Development and Seed Formation, Maturity, Dormancy', and create a list like this: ['Stage1', 'Stage2'].)")
+#
+# suit_soil: str = Field(title="Suit Soil", description="The type of soil suitable for cultivating this plant (select the two most accurate types from 'Sandy Soil, Silty Soil, Clay Soil, Loamy Soil, Peaty Soil, Chalky Soil, Sandy Loam', and create a list like this: ['SoilType1', 'SoilType2'].)")
+#
+# caution: str = Field(title="Caution", description="A brief description of the precautions to take when cultivating this plant.")
+
+# family_name: str = Field(title="Family Name")
+# genus_name: str = Field(title="Genus Name")
+# binomial: str = Field(title="Binomial")
+# en_name: str = Field(title="En Name")
+# en_common_names: List[str] = Field(title="En Common Names")
+# cn_name: str = Field(title="Cn Name")
+# cn_common_names: List[str] = Field(title="Cn Common Names")
+# diseases_and_pathogen: dict = Field(title="Diseases And Pathogen")
+# suit_humidity: str = Field(title="Suit Humidity")
+# suit_temperature: str = Field(title="Suit Temperature")
+# ket_stages: List[str] = Field(title="Ket Stages")
+# suit_soil: str = Field(title="Suit Soil")
+# caution: str = Field(title="Caution")
+
 
 class PlantIntel(BaseModel):
-    # family_name: str = Field(title="Family Name", description="The plant's family Latin name (cannot be empty)")
-    #
-    # genus_name: str = Field(title="Genus Name", description="The plant's genus Latin name (cannot be empty)")
-    #
-    # binomial: str = Field(title="Binomial", description="The plant's binomial nomenclature (cannot be empty)")
-    #
-    # en_name: str = Field(title="En Name", description="The plant's English name (can be empty if not available)")
-    #
-    # en_common_names: List[str] = Field(title="En Common Names", description="The plant's English common names (return a list of up to three most common names like this: ['name1', 'name2', 'name3']. Can be empty if not available.)")
-    #
-    # cn_name: str = Field(title="Cn Name", description="The plant's Chinese name (answer in Chinese, cannot be empty)")
-    #
-    # cn_common_names: List[str] = Field(title="Cn Common Names", description="The plant's Chinese common names (return a list of up to three most common names like this: ['name1', 'name2', 'name3']. Can be empty if not available.)")
-    #
-    # diseases_and_pathogen: dict = Field(title="Diseases And Pathogen", description="Diseases susceptible to this plant and the binomial nomenclature of related pathogens (cannot be empty, select the two most common, return in a dictionary of key-value pairs where the key is the disease and the value is the Latin name of the pathogen, like this: 'disease1':'pathogen1'.)")
-    #
-    # suit_humidity: str = Field(title="Suit Humidity", description="The suitable relative humidity range for cultivating this plant (in %, like 'a%-b%'.)")
-    #
-    # suit_temperature: str = Field(title="Suit Temperature", description="The suitable temperature range in Celsius for cultivating this plant (in Celsius, like 'a℃-b℃'.)")
-    #
-    # ket_stages: List[str] = Field(title="Ket Stages", description="The key growth stages for cultivating this plant (select the two most accurate stages from 'Germination, Seedling, Vegetative, Budding, Flowering, Pollination and Fertilization, Fruit Development and Seed Formation, Maturity, Dormancy', and create a list like this: ['Stage1', 'Stage2'].)")
-    #
-    # suit_soil: str = Field(title="Suit Soil", description="The type of soil suitable for cultivating this plant (select the two most accurate types from 'Sandy Soil, Silty Soil, Clay Soil, Loamy Soil, Peaty Soil, Chalky Soil, Sandy Loam', and create a list like this: ['SoilType1', 'SoilType2'].)")
-    #
-    # caution: str = Field(title="Caution", description="A brief description of the precautions to take when cultivating this plant.")
-
-    # family_name: str = Field(title="Family Name")
-    # genus_name: str = Field(title="Genus Name")
-    # binomial: str = Field(title="Binomial")
-    # en_name: str = Field(title="En Name")
-    # en_common_names: List[str] = Field(title="En Common Names")
-    # cn_name: str = Field(title="Cn Name")
-    # cn_common_names: List[str] = Field(title="Cn Common Names")
-    # diseases_and_pathogen: dict = Field(title="Diseases And Pathogen")
-    # suit_humidity: str = Field(title="Suit Humidity")
-    # suit_temperature: str = Field(title="Suit Temperature")
-    # ket_stages: List[str] = Field(title="Ket Stages")
-    # suit_soil: str = Field(title="Suit Soil")
-    # caution: str = Field(title="Caution")
 
     family_name: str = Field(
         title="Family Name", examples=["Poaceae"], description="cannot be empty"

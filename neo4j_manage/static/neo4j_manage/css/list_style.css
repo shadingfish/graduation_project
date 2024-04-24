@@ -12,6 +12,7 @@
     border: 1px solid #ddd; /* 单元格边框 */
     padding: 8px; /* 单元格内边距 */
     text-align: center; /* 文字居中 */
+    white-space: nowrap;
 }
 
 /* 表头样式 */
@@ -19,6 +20,13 @@
     background-color: #005400; /* 深绿色背景 */
     color: white; /* 白色字体 */
 }
+
+table .btn-danger, table .btn-primary {
+    padding: 5px 8px;  /* 重置内边距 */
+    border: none;  /* 重置边框 */
+    border-radius: 2px;  /* 重置边角半径 */
+}
+
 /* 分页控件样式 */
 .pagination {
     justify-content: center; /* 居中分页按钮 */
@@ -28,7 +36,6 @@
 .form-section {
     background-color: #f2f2f2; /* 表单背景色 */
     padding: 15px;
-    margin-bottom: 20px;
     border-radius: 5px;
 }
 
@@ -45,17 +52,13 @@
 }
 
 /* 表单内的按钮样式 */
-.form-section button {
-    background-color: #008000; /* 绿色按钮 */
+.col-md-4 button {
+    /*background-color: #008000; !* 绿色按钮 *!*/
     color: white; /* 白色文字 */
     border: none;
     padding: 8px 15px;
     margin-top: 10px; /* 上间距 */
     border-radius: 5px;
-}
-
-.form-section button:hover {
-    background-color: #005400; /* 鼠标悬浮时的深绿色 */
 }
 
 .formcontrol {

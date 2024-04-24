@@ -21,10 +21,20 @@ body, textarea {
     padding: 10px 20px;
     margin: 0 10px; /* 为按钮之间添加间隙 */
     cursor: pointer;
-    background-color: #006400; /* 深绿色背景 */
+    /*background-color: #006400; !* 深绿色背景 *!*/
     color: white; /* 白色字体 */
     border: none;
     border-radius: 5px;
+}
+
+.button[aria-pressed="false"] {
+    background-color: #a91600;
+    border-color: #720f03;
+}
+
+.button[aria-pressed="false"]:hover {
+    background-color: #f62202; /* 激活状态的悬浮色 */
+    border-color: #720f03;
 }
 
 /* 确保总体容器宽度与比例相符 */

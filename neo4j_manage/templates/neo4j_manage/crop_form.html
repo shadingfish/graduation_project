@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div id="container1" class="container mt-4">
     <div class="row">
         <div class="col-md-12">
             <h2>编辑作物信息</h2>
@@ -19,8 +19,19 @@
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">保存更改</button>
                 <a href="{% url 'neo4j-manage' %}" class="btn btn-secondary">取消</a>
+                <!-- 删除按钮 -->
+{#                <button type="button" class="btn btn-danger" onclick="confirmDelete()">删除</button>#}
             </form>
         </div>
     </div>
 </div>
+
+{#<script>#}
+{#function confirmDelete() {#}
+{#    if (confirm("您确定要删除这条记录吗？")) {#}
+{#        // 执行删除操作#}
+{#        document.location.href = "{% url 'crop_delete' object.id %}";#}
+{#    }#}
+{#</script>#}
+
 {% endblock %}

@@ -16,7 +16,7 @@ button {
 }
 
 button:hover {
-    background-color: #005400; /* 按钮悬停时的背景颜色 */
+    background-color: #005007; /* 按钮悬停时的背景颜色 */
 }
 
 html {
@@ -38,7 +38,7 @@ h1, h2, h3 {
 .main-navigation {
     width: 100%;
     background-color: #008000; /* 导航背景颜色 */
-    padding: 1rem 0;
+    padding: 0 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
@@ -57,9 +57,12 @@ h1, h2, h3 {
 
 .main-navigation ul li {
     margin: 0 10px;
+    padding: 0; /* 确保列表项没有内边距，因为我们将在 <a> 标签上添加 */
 }
 
 .main-navigation a {
+    display: block; /* 让链接填充整个列表项 */
+    padding: 10px 20px; /* 增加填充来增加点击区域和可视范围 */
     text-decoration: none;
     color: white;
     font-weight: bold;
@@ -67,7 +70,9 @@ h1, h2, h3 {
 
 .main-navigation a:hover,
 .main-navigation a:active {
-    color: #26a100;
+    background-color: #FFFFFF; /* 链接悬停时的背景颜色 */
+    color: #008000; /* 链接悬停时的字体颜色 */
+    text-decoration: none; /* 确保悬停时没有文本装饰 */
 }
 
 /* 主内容区域样式 */
@@ -82,6 +87,9 @@ p {
 }
 
 .btn-primary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
     background-color: #005400; /* 深绿色背景 */
     border-color: #003d33; /* 可以根据需要调整边框颜色 */
 }
@@ -89,6 +97,18 @@ p {
 .btn-primary:hover {
     background-color: #004225; /* 深绿色的稍微深一点的阴影色，当鼠标悬浮时 */
     border-color: #002d1a;
+}
+
+.btn-danger {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-warning {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
 }
 
 

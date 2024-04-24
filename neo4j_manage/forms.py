@@ -2,6 +2,10 @@ from django import forms
 from .models import Crop
 
 
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+
 class CropForm(forms.ModelForm):
     class Meta:
         model = Crop

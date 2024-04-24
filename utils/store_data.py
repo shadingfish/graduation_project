@@ -1,18 +1,55 @@
 import json
 
-from neo4j import GraphDatabase
 from .extracter import add_pathogen
 from django.conf import settings
 
 from .output_parsers import PathogenIntel
+import logging
+
+logger = logging.getLogger(__name__)
+
+import time
+from neo4j import GraphDatabase
+
+MAX_RETRIES = 5
+RETRY_INTERVAL = 5
+
+
+class Neo4jConnection:
+    def __init__(self):
+        self.driver = None
+
+    def __enter__(self):
+        self.driver = GraphDatabase.driver(
+            settings.NEO4J_URL, auth=("neo4j", settings.NEO4J_PASSWORD)
+        )
+        session = self.driver.session()
+        if session is None:
+            raise Exception("Failed to create a session.")
+        return session
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.driver.close()
 
 
 # 定义一个函数用于创建Neo4j事务
 def create_neo4j_transaction():
-    driver = GraphDatabase.driver(
-        settings.NEO4J_URL, auth=("neo4j", settings.NEO4J_PASSWORD)
-    )
-    return driver.session()
+    for attempt in range(MAX_RETRIES):
+        try:
+            return Neo4jConnection()
+        except Exception as e:
+            print(f"Failed to create Neo4j transaction (Attempt {attempt + 1}): {e}")
+            if attempt < MAX_RETRIES - 1:
+                print(f"Retrying in {RETRY_INTERVAL} seconds...")
+                time.sleep(RETRY_INTERVAL)
+    raise Exception("Failed to create Neo4j transaction after multiple attempts")
+
+
+# def create_neo4j_transaction():
+#     driver = GraphDatabase.driver(
+#         settings.NEO4J_URL, auth=("neo4j", settings.NEO4J_PASSWORD)
+#     )
+#     return driver.session()
 
 
 def create_crop(tx, crop_data):
@@ -95,7 +132,8 @@ def create_crop(tx, crop_data):
                     Disease=disease,
                 )
     except Exception as e:
-        print(f"Error connecting to Neo4j: {e}")
+        logger.error(f"An error occurred: {e}", exc_info=True)
+        raise e
 
 
 def create_pathogen_nodes(tx, pathogen_data):
@@ -132,7 +170,8 @@ def create_pathogen_nodes(tx, pathogen_data):
         )
 
     except Exception as e:
-        print(f"Error connecting to Neo4j: {e}")
+        logger.error(f"An error occurred: {e}", exc_info=True)
+        raise e
 
 
 # 创建或更新 Genus 和 Family 节点，并建立它们之间的 PART_OF 关系
@@ -154,7 +193,66 @@ def create_genus_family_in_neo4j(tx, crop):
         )
     except Exception as e:
         print(f"Error connecting to Neo4j: {e}")
-        raise
+        raise e
+
+
+def cn_query_dict(tx, chinese_name):
+    print(f"use chinese name {chinese_name} to check data")
+    try:
+        cypher_query = """
+        MATCH (c:Crop)
+        WHERE c.ChineseName = $chinese_name OR ANY(name IN c.ChineseCommonNames WHERE name = $chinese_name)
+        OPTIONAL MATCH (c)-[:BELONGS_TO]->(g:Genus)
+        OPTIONAL MATCH (g)-[:PART_OF]->(f:Family)
+        OPTIONAL MATCH (c)-[:SUITABLE_FOR]->(s:SoilType)
+        OPTIONAL MATCH (c)-[:HAS_KEY_STAGE]->(st:GrowthStage)
+        OPTIONAL MATCH (c)-[r:SUSCEPTIBLE_TO]->(p:Pathogen)
+        RETURN
+            c.Binomial AS binomial,
+            c.EnglishName AS en_name,
+            c.EnglishCommonNames AS en_common_names,
+            c.ChineseName AS cn_name,
+            c.ChineseCommonNames AS cn_common_names,
+            c.SuitHumidity AS suit_humidity,
+            c.SuitTemperature AS suit_temperature,
+            c.Caution AS caution,
+            f.FamilyName AS family_name,
+            g.GenusName AS genus_name,
+            COLLECT(DISTINCT  s.Name) AS suit_soil,
+            COLLECT(DISTINCT  st.Stage) AS key_stages,
+            COLLECT(DISTINCT {disease: r.disease, pathogen: p.Binomial}) AS diseases_and_pathogen
+        """
+        result = tx.run(cypher_query, {"chinese_name": chinese_name})
+        print("get check results in cn_query_dict: ")
+
+        data = [record.data() for record in result]  # Simplified data collection
+
+        # data = []
+        # for record in result:
+        #     record_data = {
+        #         "binomial": record["binomial"],
+        #         "en_name": record["en_name"],
+        #         "en_common_names": record["en_common_names"],
+        #         "cn_name": record["cn_name"],
+        #         "cn_common_names": record["cn_common_names"],
+        #         "suit_humidity": record["suit_humidity"],
+        #         "suit_temperature": record["suit_temperature"],
+        #         "caution": record["caution"],
+        #         "family_name": record["family_name"],
+        #         "genus_name": record["genus_name"],
+        #         "suit_soils": record["suit_soils"],
+        #         "key_stages": record["key_stages"],
+        #         "diseases_and_pathogens": record["diseases_and_pathogens"]
+        #     }
+        #     data.append(record_data)
+
+        if not data:
+            return "Crop does not exist or an error occurred."
+
+        return data  # 返回数据列表，其中每个元素都是一个记录的字典
+
+    except Exception as e:
+        print(f"Error connecting to Neo4j: {e}")
 
 
 def query_dict(tx, plant):

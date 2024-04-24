@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kalnia:wght@400;700&family=Open+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins&display=swap');
 
 body {
-    background-color: #E6FFE6; /* 绿色背景 */
     font-family: 'Open Sans', Arial, sans-serif; /* 无衬线字体 */
     margin: 0;
     padding: 0;
@@ -10,6 +9,65 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh; /* 垂直居中 */
+}
+
+.main-background {
+    flex-direction: column;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url('../images/Signbase2.jpg') no-repeat center center;
+    background-size: 100% 100%;
+    display: flex;
+    align-items: flex-start;  /* 水平方向左对齐 */
+    justify-content: center;  /* 垂直方向居中对齐 */
+    padding-left: 30px; /* 增加左侧内边距，使文本不紧贴边缘 */
+    padding-right: 50px;
+    color: #FFFFFF; /* 字体颜色设置为白色 */
+    z-index: 0; /* 确保背景在内容之下 */
+}
+
+.hr-line {
+    width: 100%; /* 横向填满容器 */
+    margin: 20px 0; /* 添加一些垂直外边距 */
+    height: 0.5%; /* 设置高度为 4px，可以调整以适应你的设计 */
+    background-color: white; /* 设置背景颜色为白色 */
+    border: none; /* 去除边框 */
+}
+
+.main-background svg {
+    width: 35%;  /* 设置宽度为父容器的25% */
+    height: 35%; /* 设置高度为父容器的25% */
+    display: block;  /* 块级显示 */
+}
+
+.main-background h1 {
+    font-family: "Noto Serif SC", serif; /* 通用设置 */
+    font-weight: 900;
+    font-style: normal;
+    text-align: left;
+    color: #FFFFFF;
+    /*margin: 0; !* 移除默认的外边距 *!*/
+    /*padding: 10px 0; !* 增加一些内部间距 *!*/
+}
+
+.main-background h1:lang(en) {
+    font-family: "Abril Fatface", serif; /* 专门为英文设置 */
+    font-weight: 400; /* 英文的正常字重 */
+}
+
+.main-content {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    background-color: #E6FFE6; /* 绿色背景 */
+    z-index: 1;
+}
+
+.main-content, .main-background {
+    width: 50%; /* 每个部分占半屏 */
+    height: 100vh; /* 每个部分占满整个视口的高度 */
+    position: relative; /* 为内部元素定位提供基础 */
 }
 
 .container {

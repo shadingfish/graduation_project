@@ -1,9 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.admin import GroupAdmin
-
-from query.models import QueryHistory
 from .forms import UserRegisterForm
 
 
@@ -53,4 +50,3 @@ class UserAdmin(BaseUserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 # admin.site.register(Group)
-admin.site.register(QueryHistory)
