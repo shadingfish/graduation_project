@@ -41,19 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
     let data = graph_data;
 
     try {
-        showLoadingModal();
+        
         if (data.length === 0) {
             const message = document.createElement('p');
             message.textContent = '没有可显示的数据。如果您的检索语句中有可以被识别为[农作物]的内容，它的相关知识图谱将会被展示在这里。';
             document.getElementById('graph-output').appendChild(message);
-            hideLoadingModal();
         } else {
+            showLoadingModal();
             // 基于data构建图形
             renderGraph(data);
             hideLoadingModal();
         }
     } catch (error) {
-        hideLoadingModal();
         showErrorModal("发生错误：" + error)
         // alert("发生错误：" + error);
     }

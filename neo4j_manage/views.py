@@ -57,33 +57,6 @@ class CropDeleteView(LoginRequiredMixin, Neo4jManagerMixin, DeleteView):
                 return JsonResponse({"success": False, "error": str(e)}, status=400)
         return super().delete(request, *args, **kwargs)
 
-    # def delete(self, request, *args, **kwargs):
-    #     try:
-    #         # 获取要删除的对象实例
-    #         self.object = self.get_object()
-    #
-    #         # 调用基类的 delete 方法，这将处理删除逻辑并重定向到 success_url
-    #         response = super(CropDeleteView, self).delete(request, *args, **kwargs)
-    #
-    #         # 如果来自 AJAX 请求，提供 JSON 响应
-    #         if request.is_ajax():
-    #             return JsonResponse({'success': True})
-    #         return response
-    #     except PermissionDenied:
-    #         # 如果捕获到权限拒绝异常，也给出 JSON 响应
-    #         if request.is_ajax():
-    #             return JsonResponse({'success': False, 'error': "Permission denied"})
-    #         else:
-    #             raise  # 对于非 AJAX 请求，重新抛出异常
-    #     except Exception as e:
-    #         # 处理任何其他异常并提供 JSON 响应
-    #         if request.is_ajax():
-    #             return JsonResponse({'success': False, 'error': str(e)})
-    #         else:
-    #             return
-    #             # 对于非 AJAX 请求，可以选择重定向或者抛出异常
-    #             # return redirect('error_page_url')  # 可以重定向到一个错误页面
-
 
 class CropUpdateView(LoginRequiredMixin, Neo4jManagerMixin, UpdateView):
     model = Crop
@@ -327,3 +300,30 @@ def update_crop_in_neo4j(crop_name, crop_data):
     except Exception as e:
         logger.error(f"An error occurred: {e}", exc_info=True)
         raise e
+
+    # def delete(self, request, *args, **kwargs):
+    #     try:
+    #         # 获取要删除的对象实例
+    #         self.object = self.get_object()
+    #
+    #         # 调用基类的 delete 方法，这将处理删除逻辑并重定向到 success_url
+    #         response = super(CropDeleteView, self).delete(request, *args, **kwargs)
+    #
+    #         # 如果来自 AJAX 请求，提供 JSON 响应
+    #         if request.is_ajax():
+    #             return JsonResponse({'success': True})
+    #         return response
+    #     except PermissionDenied:
+    #         # 如果捕获到权限拒绝异常，也给出 JSON 响应
+    #         if request.is_ajax():
+    #             return JsonResponse({'success': False, 'error': "Permission denied"})
+    #         else:
+    #             raise  # 对于非 AJAX 请求，重新抛出异常
+    #     except Exception as e:
+    #         # 处理任何其他异常并提供 JSON 响应
+    #         if request.is_ajax():
+    #             return JsonResponse({'success': False, 'error': str(e)})
+    #         else:
+    #             return
+    #             # 对于非 AJAX 请求，可以选择重定向或者抛出异常
+    #             # return redirect('error_page_url')  # 可以重定向到一个错误页面

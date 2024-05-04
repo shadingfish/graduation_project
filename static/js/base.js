@@ -14,23 +14,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
+let loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+let errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+
 function showErrorModal(customMessage) {
     // 设置个性化的错误信息
     document.getElementById('error-message').textContent = customMessage;
-
     // 显示模态框
-    $('#errorModal').modal('show');
+    // $('#errorModal').modal('show');
+    errorModal.show();
 }
 
 
 function showLoadingModal(customMessage) {
     // 设置个性化的错误信息
     document.getElementById('loading-message').textContent = customMessage;
-
     // 显示模态框
-    $('#loadingModal').modal('show');
+    // $('#loadingModal').modal('show');
+    loadingModal.show();
 }
 
 function hideLoadingModal() {
-    $('#loadingModal').modal('hide');
+    // $('#loadingModal').modal('hide');
+    loadingModal.hide();
 }
