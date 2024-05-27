@@ -1,8 +1,3 @@
-function retrieveDataAndShowModal() {
-    let cropName = document.getElementById("crop-select").value;
-    fetchAndUpdate(cropName);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('uploadFile').addEventListener('submit', function(e) {
@@ -84,6 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // }
 });
 
+function retrieveDataAndShowModal() {
+    let cropName = document.getElementById("crop-select").value;
+    fetchAndUpdate(cropName);
+}
+
 function fetchAndUpdate(cropName) {
     showLoadingModal("正在获取数据...");
     let fetchUrl = document.getElementById('fetch-url').getAttribute('data-url');
@@ -93,7 +93,7 @@ function fetchAndUpdate(cropName) {
             'X-CSRFToken': getCookie('csrftoken'),
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ crop_name: cropName })
+        body: cropName
     })
     .then(response => response.json())
     .then(data => {
@@ -108,7 +108,7 @@ function fetchAndUpdate(cropName) {
 }
 
 function confirmUpdate() {
-    let cropName = document.getElementById("crop-select").value;
+    let cropName = JSON.parse(document.getElementById("crop-select").value).latin_name;
     let datadict = document.getElementById("gpt-data").textContent;
     updateNeo4jDatabase(cropName, datadict);
 }

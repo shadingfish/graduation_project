@@ -234,10 +234,23 @@ class FileUploadView(LoginRequiredMixin, Neo4jManagerMixin, View):
 class FetchAndUpdateView(LoginRequiredMixin, Neo4jManagerMixin, View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        crop_name = data.get("crop_name")
+        crop_name = data.get("latin_name")
+        crop_cn_name = data.get("chinese_name")
+        print(crop_cn_name)
 
         print("Asking GPT...")
         gpt_data = extract(plant=crop_name)
+
+        print("Type of gpt_data:", type(gpt_data))
+        gpt_dict = json.loads(gpt_data)
+
+        if gpt_dict["cn_name"] != crop_cn_name:
+            temp = gpt_dict["cn_name"]
+            gpt_dict["cn_name"] = crop_cn_name
+            gpt_dict["cn_common_names"].append(temp)
+            gpt_dict["cn_common_names"] = list(set(gpt_dict["cn_common_names"]))
+            gpt_data = json.dumps(gpt_dict, ensure_ascii=False)
+
         print("Querying Neo4j...")
         with create_neo4j_transaction() as session:
             neo4j_data = query_dict(session, crop_name)

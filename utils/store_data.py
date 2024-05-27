@@ -247,6 +247,37 @@ def cn_query_dict(tx, chinese_name):
         #     data.append(record_data)
 
         if not data:
+            blur_cypher_query = """
+            MATCH (c:Crop)
+            WITH c, apoc.text.levenshteinDistance(c.ChineseName, $chinese_name) AS distance
+            WHERE distance <= 2 OR ANY(name IN c.ChineseCommonNames WHERE apoc.text.levenshteinDistance(name, $chinese_name) <= 2)
+            OPTIONAL MATCH (c)-[:BELONGS_TO]->(g:Genus)
+            OPTIONAL MATCH (g)-[:PART_OF]->(f:Family)
+            OPTIONAL MATCH (c)-[:SUITABLE_FOR]->(s:SoilType)
+            OPTIONAL MATCH (c)-[:HAS_KEY_STAGE]->(st:GrowthStage)
+            OPTIONAL MATCH (c)-[r:SUSCEPTIBLE_TO]->(p:Pathogen)
+            RETURN
+                c.Binomial AS binomial,
+                c.EnglishName AS en_name,
+                c.EnglishCommonNames AS en_common_names,
+                c.ChineseName AS cn_name,
+                c.ChineseCommonNames AS cn_common_names,
+                c.SuitHumidity AS suit_humidity,
+                c.SuitTemperature AS suit_temperature,
+                c.Caution AS caution,
+                f.FamilyName AS family_name,
+                g.GenusName AS genus_name,
+                COLLECT(DISTINCT s.Name) AS suit_soil,
+                COLLECT(DISTINCT st.Stage) AS key_stages,
+                COLLECT(DISTINCT {disease: r.disease, pathogen: p.Binomial}) AS diseases_and_pathogen
+            """
+
+            result = tx.run(blur_cypher_query, {"chinese_name": chinese_name})
+            print("get blur check results in cn_query_dict: ")
+
+            data = [record.data() for record in result]  # Simplified data collection
+
+        if not data:
             return "Crop does not exist or an error occurred."
 
         return data  # 返回数据列表，其中每个元素都是一个记录的字典
